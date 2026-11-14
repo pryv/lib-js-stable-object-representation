@@ -26,6 +26,19 @@ describe('Event', function () {
       hash1.should.equal(hash2);
       done();
     });
+
+    it('compute() uses the given algorithm', function () {
+      var event = require('../data/eventA-v1-valid.json');
+      var result = bcLib.event.compute(event, 'sha512');
+      result.integrity.should.startWith('EVENT:0:sha512-');
+      result.integrity.should.equal(bcLib.event.hash(event, 'sha512'));
+      result.key.should.equal(bcLib.event.key(event));
+    });
+
+    it('compute() works when detached from the module', function () {
+      var compute = bcLib.event.compute;
+      compute(require('../data/eventA-v1-valid.json')).integrity.should.equal(validHash);
+    });
   });
 
   describe('Key', function () {

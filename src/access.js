@@ -23,8 +23,8 @@ module.exports.key = function key(access) {
   return 'ACCESS:0:' + access.id + ':' + access.modified;
 };
 
-module.exports.compute = function (access) {
-  return { key: this.key(access), integrity: this.hash(access) }
+module.exports.compute = function (access, algorithm) {
+  return { key: module.exports.key(access), integrity: module.exports.hash(access, algorithm) };
 };
 
 // -- Internal to Pryv.io 
@@ -48,7 +48,10 @@ function stringifyAccess0(access) {
    delete a.calls;
 
   // delete apiEndPoint for computation .. 
-  delete a.apiEndpoint; 
+  delete a.apiEndpoint;
+
+  // delete usage (call counters derived at read time) for computation ..
+  delete a.usage;
 
   // remove null deleted property
   if (a.deleted == null) {

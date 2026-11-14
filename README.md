@@ -23,7 +23,7 @@ Returns a **unique key** for this event version.
 
 ### compute: `stableRepresentation.event.compute(event, [algorithm])` 
 
-Returns an object equivalent of `{ key: key(event), hash: hash(event, algorithm) }`
+Returns an object equivalent of `{ key: key(event), integrity: hash(event, algorithm) }` (before 1.2.0 the `algorithm` argument was ignored and the default was always used). `stableRepresentation.access.compute(access, [algorithm])` works the same way.
 
 ```
 {
@@ -114,6 +114,7 @@ Special attention is required for
 - **apiEndpoint**: is ignored from computation (full domain name is part of settings not data)
 - **lastUsed**: is ignored as too dynamic...
 - **calls**: is ignored as too dynamic...
+- **usage**: is ignored (call counters derived at read time, since 1.2.0)
 
 ### Properties expected in an event object
 

@@ -57,6 +57,27 @@ describe('Access', function () {
       result.integrity.should.equal(validHash);
       done();
     });
+
+    it('Ignores usage', function () {
+      var withUsage = Object.assign({}, require('../data/accessA-valid.json'), {
+        usage: { total: 3, reads: 2, writes: 1, session: 0, other: 0, byMethod: { 'events.get': 2, 'events.create': 1 } }
+      });
+      bcLib.access.compute(withUsage).integrity.should.equal(validHash);
+      bcLib.access.hash(withUsage).should.equal(validHash);
+    });
+
+    it('Uses the given algorithm', function () {
+      var original = require('../data/accessA-valid.json');
+      var result = bcLib.access.compute(original, 'sha512');
+      result.integrity.should.startWith('ACCESS:0:sha512-');
+      result.integrity.should.equal(bcLib.access.hash(original, 'sha512'));
+      result.key.should.equal(bcLib.access.key(original));
+    });
+
+    it('Works when detached from the module', function () {
+      var compute = bcLib.access.compute;
+      compute(require('../data/accessA-valid.json')).integrity.should.equal(validHash);
+    });
   });
 
 });

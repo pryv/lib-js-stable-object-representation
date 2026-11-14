@@ -23,8 +23,8 @@ module.exports.key = function key(event) {
   return 'EVENT:0:' + event.id + ':' + event.modified;
 };
 
-module.exports.compute = function (event) {
-  return { key: this.key(event), integrity: this.hash(event) }
+module.exports.compute = function (event, algorithm) {
+  return { key: module.exports.key(event), integrity: module.exports.hash(event, algorithm) };
 };
 
 // -- Internal to Pryv.io 
@@ -59,7 +59,7 @@ function stringifyEvent0(event) {
   if (!e.trashed) { delete e.trashed; }
   // remove readToken from attachements
   if (e.attachments) {
-    for (attachment of e.attachments) {
+    for (const attachment of e.attachments) {
       delete attachment.readToken;
     }
   }
